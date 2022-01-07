@@ -5,13 +5,15 @@ const operators = document.querySelectorAll(".operator");
 const equal = document.querySelector(".equal");
 const clear = document.querySelector(".clear");
 const decimal = document.querySelector(".decimal");
+const deleteBtn = document.querySelector(".delete");
 let decimalON = false;
 let num1;
 let num2;
 let chosenOperator = "";
+let calculationDone = false;
 // function for sum
 function sum(num1, num2) {
-  return parseInt(num1) + parseInt(num2);
+  return Number(num1) + Number(num2);
 }
 
 // function for subtract
@@ -29,13 +31,13 @@ function divide(num1, num2) {
 // function for operating with the numbers when one of the operator is given
 function operate(num1, operator, num2) {
   if (operator === "+") {
-    return sum(num1, num2);
+    return Math.round((sum(num1, num2) * 100000) / 100000);
   } else if (operator === "-") {
-    return subtract(num1, num2);
+    return Math.round((subtract(num1, num2) * 100000) / 100000);
   } else if (operator === "×") {
-    return multiply(num1, num2);
+    return Math.round((multiply(num1, num2) * 100000) / 100000);
   } else if (operator === "÷") {
-    return divide(num1, num2);
+    return Math.round((divide(num1, num2) * 100000) / 100000);
   }
 }
 // when qual button is clicked it will calculate and give the answer in current display and show the expression in previous display
@@ -45,6 +47,8 @@ equal.addEventListener("click", () => {
     previousDisplay.textContent = num1 + chosenOperator + num2;
     currentDisplay.textContent = operate(num1, chosenOperator, num2);
     chosenOperator = "";
+    decimalON = false;
+    calculationDone = true;
   }
 });
 // added event listener for clear button clears everything
@@ -54,6 +58,8 @@ clear.addEventListener("click", () => {
   num1 = "";
   num2 = "";
   chosenOperator = "";
+  decimalON = false;
+  calculationDone = true;
 });
 // added event listener for operators if the operator is already defined it will give calculate the answer and display on the previous display with the new operator and add the new operator to the chosen operator
 operators.forEach((operator) => {
@@ -61,6 +67,7 @@ operators.forEach((operator) => {
     if (currentDisplay.textContent === "") {
       chosenOperator = operator.textContent;
       previousDisplay.textContent = num1 + chosenOperator;
+      decimalON = false;
     } else {
       if (
         chosenOperator === "+" ||
@@ -74,11 +81,13 @@ operators.forEach((operator) => {
         chosenOperator = operator.textContent;
         previousDisplay.textContent = answer + chosenOperator;
         currentDisplay.textContent = "";
+        decimalON = false;
       } else if (chosenOperator === "") {
         num1 = currentDisplay.textContent;
         chosenOperator = operator.textContent;
         previousDisplay.textContent = num1 + operator.textContent;
         currentDisplay.textContent = "";
+        decimalON = false;
       }
     }
   });
@@ -86,14 +95,36 @@ operators.forEach((operator) => {
 // added event listener for numerical buttons if current display is 0 which is default it will change it to the new input and if it isn't then joins the new input in toa string
 numbers.forEach((num) => {
   num.addEventListener("click", () => {
-    if (currentDisplay.textContent === "0") {
+    if (currentDisplay.textContent === "0" || calculationDone === true) {
       currentDisplay.textContent = num.textContent;
+      calculationDone = false;
     } else {
       currentDisplay.textContent += num.textContent;
     }
   });
 });
-
+// event listener for decimal button and 0 before itself if there is nothing on the current display or when new calculation starts
 decimal.addEventListener("click", () => {
-  currentDisplay.textContent += decimal.textContent;
+  if (decimalON === false) {
+    if (currentDisplay.textContent === "" || calculationDone === true) {
+      currentDisplay.textContent = 0 + decimal.textContent;
+      decimalON = true;
+      calculationDone = false;
+    } else {
+      currentDisplay.textContent += decimal.textContent;
+      decimalON = true;
+      calculationDone = false;
+    }
+  }
+});
+deleteBtn.addEventListener("click", () => {
+  string = currentDisplay.textContent;
+  if (string.charAt(string.length - 1) === ".") {
+    string = string.substring(0, string.length - 1);
+    currentDisplay.textContent = string;
+    decimalON = false;
+  } else {
+    string = string.substring(0, string.length - 1);
+    currentDisplay.textContent = string;
+  }
 });
