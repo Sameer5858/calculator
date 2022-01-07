@@ -15,7 +15,6 @@ let calculationDone = false;
 function sum(num1, num2) {
   return Number(num1) + Number(num2);
 }
-
 // function for subtract
 function subtract(num1, num2) {
   return num1 - num2;
@@ -31,24 +30,35 @@ function divide(num1, num2) {
 // function for operating with the numbers when one of the operator is given
 function operate(num1, operator, num2) {
   if (operator === "+") {
-    return Math.round((sum(num1, num2) * 100000) / 100000);
+    return sum(num1, num2);
   } else if (operator === "-") {
-    return Math.round((subtract(num1, num2) * 100000) / 100000);
+    return subtract(num1, num2);
   } else if (operator === "×") {
-    return Math.round((multiply(num1, num2) * 100000) / 100000);
+    return multiply(num1, num2);
   } else if (operator === "÷") {
-    return Math.round((divide(num1, num2) * 100000) / 100000);
+    return divide(num1, num2);
   }
 }
 // when qual button is clicked it will calculate and give the answer in current display and show the expression in previous display
 equal.addEventListener("click", () => {
-  if (chosenOperator) {
+  if (chosenOperator === "") {
+  } else if (chosenOperator) {
     num2 = currentDisplay.textContent;
-    previousDisplay.textContent = num1 + chosenOperator + num2;
-    currentDisplay.textContent = operate(num1, chosenOperator, num2);
-    chosenOperator = "";
-    decimalON = false;
-    calculationDone = true;
+    if (
+      chosenOperator === "÷" &&
+      Math.round(Number(num2) * 100000000000000000000000000) /
+        100000000000000000000000000 ===
+        0
+    ) {
+      return alert("Can't divide by zero");
+    } else {
+      previousDisplay.textContent = num1 + chosenOperator + num2;
+      currentDisplay.textContent =
+        Math.round(operate(num1, chosenOperator, num2) * 1000) / 1000;
+      chosenOperator = "";
+      decimalON = false;
+      calculationDone = true;
+    }
   }
 });
 // added event listener for clear button clears everything
@@ -76,12 +86,17 @@ operators.forEach((operator) => {
         chosenOperator === "÷"
       ) {
         num2 = currentDisplay.textContent;
-        let answer = operate(num1, chosenOperator, num2);
-        num1 = answer;
-        chosenOperator = operator.textContent;
-        previousDisplay.textContent = answer + chosenOperator;
-        currentDisplay.textContent = "";
-        decimalON = false;
+        if (chosenOperator === "÷" && Math.round(num2 * 1000) / 1000) {
+          return alert("Can't divide by zero");
+        } else {
+          let answer =
+            Math.round(operate(num1, chosenOperator, num2) * 1000) / 1000;
+          num1 = answer;
+          chosenOperator = operator.textContent;
+          previousDisplay.textContent = answer + chosenOperator;
+          currentDisplay.textContent = "";
+          decimalON = false;
+        }
       } else if (chosenOperator === "") {
         num1 = currentDisplay.textContent;
         chosenOperator = operator.textContent;
@@ -117,6 +132,7 @@ decimal.addEventListener("click", () => {
     }
   }
 });
+// event listener for delete button
 deleteBtn.addEventListener("click", () => {
   string = currentDisplay.textContent;
   if (string.charAt(string.length - 1) === ".") {
