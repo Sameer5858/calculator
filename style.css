@@ -18,7 +18,7 @@ body {
   border: 2px solid black;
 }
 .controls {
-  min-height: 400px;
+  height: 400px;
   background-color: brown;
   flex-direction: column;
   display: flex;
@@ -31,11 +31,18 @@ button {
   border: 2px solid black;
   font-size: 24px;
 }
+.clear {
+  background-color: lightcoral;
+  border-radius: 5px;
+}
+.delete {
+  background-color: lightseagreen;
+  border-radius: 5px;
+}
 .display {
   display: flex;
   height: fit-content;
   flex-direction: column;
-  flex-grow: 1;
   margin: 5px;
   background-color: white;
   border-radius: 5px;
@@ -45,13 +52,23 @@ button {
 }
 .previous,
 .current {
-  flex: 1 1 auto;
   display: flex;
+  flex: 1 0 auto;
   flex-direction: column;
   align-items: end;
   justify-content: end;
   flex-wrap: wrap;
   padding: 10px;
+}
+.previous {
+  height: 40px;
+  flex: 1 0 auto;
+  font-size: 20px;
+  padding-bottom: 0;
+}
+.current {
+  flex: 2 0 auto;
+  height: 75px;
 }
 .column {
   display: flex;
