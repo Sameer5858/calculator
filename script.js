@@ -44,8 +44,10 @@ function addNumber(num) {
   if (currentDisplay.textContent === "0" || calculationDone === true) {
     currentDisplay.textContent = num.textContent;
     calculationDone = false;
+    answer = "";
   } else {
     currentDisplay.textContent += num.textContent;
+    answer = "";
   }
 }
 //function for operators key, if the operator is already defined it will give calculate the answer and display on the previous display with the new operator and add the new operator to the chosen operator
@@ -171,7 +173,7 @@ decimal.addEventListener("click", () => addDecimal());
 
 // event listener for delete button when clicked use del function
 deleteBtn.addEventListener("click", () => del());
-//keyboard support
+//keyboard support for buttons
 window.addEventListener("keydown", (e) => {
   if (e.key >= 0 || e.key < 9) document.getElementById(`${e.key}`).click();
   else if (e.key === ".") {
@@ -179,9 +181,10 @@ window.addEventListener("keydown", (e) => {
   } else if (e.key === "Backspace") {
     del();
   } else if (e.key === "Enter") {
+    e.preventDefault();
     startOperation();
   } else if (e.key === "Escape") {
-    del();
+    clearAll();
   } else if (e.key === "+") {
     document.getElementById("add").click();
   } else if (e.key === "-") {
