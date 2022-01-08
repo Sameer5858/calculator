@@ -50,7 +50,11 @@ function addNumber(num) {
 }
 //function for operators key, if the operator is already defined it will give calculate the answer and display on the previous display with the new operator and add the new operator to the chosen operator
 function addOperator(operator) {
-  if (currentDisplay.textContent === "") {
+  if (currentDisplay.textContent === `${answer}`) {
+    chosenOperator = operator.textContent;
+    previousDisplay.textContent = num1 + chosenOperator;
+    decimalON = false;
+  } else if (currentDisplay.textContent === "") {
     chosenOperator = operator.textContent;
     previousDisplay.textContent = num1 + chosenOperator;
     decimalON = false;
@@ -84,7 +88,10 @@ function addOperator(operator) {
 }
 // function to start operations, it will calculate and give the answer in current display and show the expression in previous display
 function startOperation() {
-  if (currentDisplay.textContent === "") {
+  if (
+    currentDisplay.textContent === "" ||
+    currentDisplay.textContent === `${answer}`
+  ) {
     return;
   } else if (chosenOperator === "") {
     return;
@@ -164,7 +171,26 @@ decimal.addEventListener("click", () => addDecimal());
 
 // event listener for delete button when clicked use del function
 deleteBtn.addEventListener("click", () => del());
-
+//keyboard support
 window.addEventListener("keydown", (e) => {
-  console.log(e);
+  if (e.key >= 0 || e.key < 9) document.getElementById(`${e.key}`).click();
+  else if (e.key === ".") {
+    addDecimal();
+  } else if (e.key === "Backspace") {
+    del();
+  } else if (e.key === "Enter") {
+    startOperation();
+  } else if (e.key === "Escape") {
+    del();
+  } else if (e.key === "+") {
+    document.getElementById("add").click();
+  } else if (e.key === "-") {
+    document.getElementById("subtract").click();
+  } else if (e.key === "*") {
+    document.getElementById("multiply").click();
+  } else if (e.key === "/") {
+    document.getElementById("divide").click();
+  } else if (e.key === ".") {
+    addDecimal();
+  }
 });
